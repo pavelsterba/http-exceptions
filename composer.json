@@ -1,10 +1,14 @@
 {
 	"name": "pavelsterba/http-exceptions",
 	"description": "HTTP status code exceptions for PHP.",
+	"license": "MIT",
+	"type": "library",
+	"homepage": "https://github.com/pavelsterba/http-exceptions",
+	"keywords": ["php", "exceptions", "http"],
 	"autoload": {
-		"classmap": [
-			"src/"
-		]
+		"psr-4": {
+			"HttpException\\": "src/HttpException/"
+		}
 	},
 	"authors": [{
 		"name": "Pavel Sterba",
