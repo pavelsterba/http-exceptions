@@ -1,0 +1,13 @@
+{
+	"name": "pavelsterba/http-exceptions",
+	"description": "HTTP status code exceptions for PHP.",
+	"autoload": {
+		"classmap": [
+			"src/"
+		]
+	},
+	"authors": [{
+		"name": "Pavel Sterba",
+		"email": "email@pavelsterba.com"
+	}]
+}

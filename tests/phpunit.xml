@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<phpunit bootstrap="../vendor/autoload.php">
+	<testsuites>
+		<testsuite name="ClientError">
+			<directory>ClientErrorExceptionsTest.php</directory>
+		</testsuite>
+		<testsuite name="ServerError">
+			<directory>ServerErrorExceptionsTest.php</directory>
+		</testsuite>
+		<testsuite name="ClientError">
+			<directory>GeneralHttpExceptionsTest.php</directory>
+		</testsuite>
+	</testsuites>
+</phpunit>
