@@ -11,5 +11,8 @@
 		<testsuite name="ClientError">
 			<directory>GeneralHttpExceptionsTest.php</directory>
 		</testsuite>
+		<testsuite name="ThrowHttpException">
+			<directory>ThrowHttpExceptionTest.php</directory>
+		</testsuite>
 	</testsuites>
 </phpunit>

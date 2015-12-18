@@ -47,3 +47,10 @@ try {
     echo $e->getCode(); // 500
 }
 ```
+
+To throw exceptions easily just with code, you can use `ThrowHttpException` class with static methods `byCode` and `withMessage`:
+
+```
+HttpException\ThrowHttpException::byCode(404);
+HttpException\ThrowHttpException::withMessage(404, 'Sorry, we cannot find it');
+```
