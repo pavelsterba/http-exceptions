@@ -1,20 +1,23 @@
 <?php
+
+declare(strict_types=1);
+
 namespace HttpException;
 
 /**
- * Parent class for 5xx server error exceptions.
- *
+ * Parent class for 5xx Server Error Exceptions.
+ * 
  * @author Pavel Sterba
  */
-abstract class ServerErrorException extends Exception
+abstract class ServerErrorException extends HttpException
 {
-	/**
-	 * @var string
-	 */
-	protected $message = 'Server Error 5xx';
+    /**
+     * @var int
+     */
+    protected $code = 50;
 
-	/**
-	 * @var int
-	 */
-	protected $code = 5;
+    /**
+     * @var string
+     */
+    protected $message = "Server Error Exception";
 }

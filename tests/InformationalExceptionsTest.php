@@ -6,16 +6,16 @@ use HttpException\HttpException;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests for 5xx Server Error Exceptions.
+ * Tests for 1xx Informational Exceptions.
  *
  * @author Pavel Sterba
  */
-class ServerErrorExceptionsTest extends TestCase
+class InformationalExceptionsTest extends TestCase
 {
     /**
      * @var string
      */
-    const EXCEPTION_CLASS_NAME_PATTERN = '\HttpException\ServerError\%s';
+    const EXCEPTION_CLASS_NAME_PATTERN = '\HttpException\Informational\%s';
 
     /**
      * @var string
@@ -37,7 +37,7 @@ class ServerErrorExceptionsTest extends TestCase
 
     /**
      * @test
-     * @dataProvider serverErrorExceptionsProvider
+     * @dataProvider informationalExceptionsProvider
      */
     public function checkExceptionType(string $exceptionName)
     {
@@ -45,12 +45,12 @@ class ServerErrorExceptionsTest extends TestCase
 
         $this->assertInstanceOf('\Exception', $e);
         $this->assertInstanceOf('\HttpException\HttpException', $e);
-        $this->assertInstanceOf('\HttpException\ServerErrorException', $e);
+        $this->assertInstanceOf('\HttpException\InformationalException', $e);
     }
 
     /**
      * @test
-     * @dataProvider serverErrorExceptionsProvider
+     * @dataProvider informationalExceptionsProvider
      */
     public function checkExceptionNotType(string $exceptionName)
     {
@@ -58,13 +58,13 @@ class ServerErrorExceptionsTest extends TestCase
 
         $this->assertNotInstanceOf('\HttpException\SuccessfulException', $e);
         $this->assertNotInstanceOf('\HttpException\RedirectionException', $e);
-        $this->assertNotInstanceOf('\HttpException\InformationalException', $e);
         $this->assertNotInstanceOf('\HttpException\ClientErrorException', $e);
+        $this->assertNotInstanceOf('\HttpException\ServerErrorException', $e);
     }
 
     /**
      * @test
-     * @dataProvider serverErrorExceptionsProvider
+     * @dataProvider informationalExceptionsProvider
      */
     public function checkStaticInitialization(string $exceptionName, int $exceptionCode)
     {
@@ -74,7 +74,7 @@ class ServerErrorExceptionsTest extends TestCase
         try {
             throw $exceptionClassName::get(self::CUSTOM_EXCEPTION_MESSAGE, $previousException);
         } catch (HttpException $e) {
-            $this->assertInstanceOf('\HttpException\ServerErrorException', $e);
+            $this->assertInstanceOf('\HttpException\InformationalException', $e);
             $this->assertEquals(self::CUSTOM_EXCEPTION_MESSAGE, $e->getMessage());
             $this->assertEquals($exceptionCode, $e->getCode());
             $this->assertEquals($previousException, $e->getPrevious());
@@ -82,24 +82,17 @@ class ServerErrorExceptionsTest extends TestCase
     }
 
     /**
-     * Provider of Server Error Exceptions.
+     * Provider of Informational Exceptions.
      * 
      * @return array
      */
-    public function serverErrorExceptionsProvider(): array
+    public function informationalExceptionsProvider(): array
     {
         return [
-            ["InternalServerErrorException", 500, "500 Internal Server Error"],
-            ["NotImplementedException", 501, "501 Not Implemented"],
-            ["BadGatewayException", 502, "502 Bad Gateway"],
-            ["ServiceUnavailableException", 503, "503 Service Unavailable"],
-            ["GatewayTimeoutException", 504, "504 Gateway Timeout"],
-            ["HTTPVersionNotSupportedException", 505, "505 HTTP Version Not Supported"],
-            ["VariantAlsoNegotiatesException", 506, "506 Variant Also Negotiates"],
-            ["InsufficientStorageException", 507, "507 Insufficient Storage"],
-            ["LoopDetectedException", 508, "508 Loop Detected"],
-            ["NotExtendedException", 510, "510 Not Extended"],
-            ["NetworkAuthenticationRequiredException", 511, "511 Network Authentication Required"],
+            ["ContinueException", 100, "100 Continue"],
+            ["SwitchingProtocolsException", 101, "101 Switching Protocols"],
+            ["ProcessingException", 102, "102 Processing"],
+            ["EarlyHintsException", 103, "103 Early Hints"],
         ];
     }
 }

@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xml>
-<phpunit bootstrap="../vendor/autoload.php">
+<phpunit bootstrap="../vendor/autoload.php" convertDeprecationsToExceptions="true">
 	<testsuites>
+		<testsuite name="Informational">
+			<directory>InformationalExceptionsTest.php</directory>
+		</testsuite>
+		<testsuite name="Successful">
+			<directory>SuccessfulExceptionsTest.php</directory>
+		</testsuite>
+		<testsuite name="Redirection">
+			<directory>RedirectionExceptionsTest.php</directory>
+		</testsuite>
 		<testsuite name="ClientError">
 			<directory>ClientErrorExceptionsTest.php</directory>
 		</testsuite>
 		<testsuite name="ServerError">
 			<directory>ServerErrorExceptionsTest.php</directory>
-		</testsuite>
-		<testsuite name="ClientError">
-			<directory>GeneralHttpExceptionsTest.php</directory>
-		</testsuite>
-		<testsuite name="ThrowHttpException">
-			<directory>ThrowHttpExceptionTest.php</directory>
 		</testsuite>
 	</testsuites>
 </phpunit>

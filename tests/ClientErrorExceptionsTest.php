@@ -1,82 +1,123 @@
 <?php
-namespace HttpException\tests;
+
+declare(strict_types=1);
+
+use HttpException\HttpException;
+use PHPUnit\Framework\TestCase;
 
 /**
- * Tests for 4xx client error exceptions.
+ * Tests for 4xx Client Error Exceptions.
  *
  * @author Pavel Sterba
  */
-class ClientErrorExceptionsTest extends \PHPUnit_Framework_TestCase
+class ClientErrorExceptionsTest extends TestCase
 {
-	/**
-	 * @var string
-	 */
-	const EXCEPITON_CLASS_NAME_PATTERN = '\HttpException\%sException';
+    /**
+     * @var string
+     */
+    const EXCEPTION_CLASS_NAME_PATTERN = '\HttpException\ClientError\%s';
 
-	/**
-	 * Initialize exception instance.
-	 *
-	 * @param string $exceptionName
-	 * @return \Exception
-	 */
-	private function initializeException($exceptionName)
-	{
-		$exceptionClassName = sprintf(self::EXCEPITON_CLASS_NAME_PATTERN, $exceptionName);
+    /**
+     * @var string
+     */
+    const CUSTOM_EXCEPTION_MESSAGE = "Custom exception message";
 
-		return new $exceptionClassName();
-	}
+    /**
+     * Initialize exception with given name.
+     * 
+     * @param string $exceptionName
+     * @return \HttpException\HttpException
+     */
+    private function initializeException(string $exceptionName): \HttpException\HttpException
+    {
+        $exceptionClassName = sprintf(self::EXCEPTION_CLASS_NAME_PATTERN, $exceptionName);
 
-	/**
-	 * @test
-	 * @dataProvider clientErrorExceptionProvider
-	 */
-	public function checkExceptionInstanceOf($exceptionName, $expectedCode, $expectedMessage)
-	{
-		$e = $this->initializeException($exceptionName);
+        return new $exceptionClassName();
+    }
 
-		$this->assertInstanceOf('\Exception', $e);
-		$this->assertInstanceOf('\HttpException\Exception', $e);
-		$this->assertInstanceOf('\HttpException\ClientErrorException', $e);
+    /**
+     * @test
+     * @dataProvider clientErrorExceptionsProvider
+     */
+    public function checkExceptionType(string $exceptionName)
+    {
+        $e = $this->initializeException($exceptionName);
 
-		$this->assertNotInstanceOf('\HttpException\ServerErrorException', $e);
-	}
+        $this->assertInstanceOf('\Exception', $e);
+        $this->assertInstanceOf('\HttpException\HttpException', $e);
+        $this->assertInstanceOf('\HttpException\ClientErrorException', $e);
+    }
 
-	/**
-	 * @test
-	 * @dataProvider clientErrorExceptionProvider
-	 */
-	public function checkExceptionMessageAndCode($exceptionName, $expectedCode, $expectedMessage)
-	{
-		$e = $this->initializeException($exceptionName);
+    /**
+     * @test
+     * @dataProvider clientErrorExceptionsProvider
+     */
+    public function checkExceptionNotType(string $exceptionName)
+    {
+        $e = $this->initializeException($exceptionName);
 
-		$this->assertEquals($expectedMessage, $e->getMessage());
-		$this->assertEquals($expectedCode, $e->getCode());
-	}
+        $this->assertNotInstanceOf('\HttpException\SuccessfulException', $e);
+        $this->assertNotInstanceOf('\HttpException\RedirectionException', $e);
+        $this->assertNotInstanceOf('\HttpException\InformationalException', $e);
+        $this->assertNotInstanceOf('\HttpException\ServerErrorException', $e);
+    }
 
-	/**
-	 * Provider of client error exceptions.
-	 */
-	public static function clientErrorExceptionProvider()
-	{
-		return [
-			['BadRequest', 400, '400 Bad Request'],
-			['Unauthorized', 401, '401 Unauthorized'],
-			['PaymentRequired', 402, '402 Payment Required'],
-			['Forbidden', 403, '403 Forbidden'],
-			['NotFound', 404, '404 Not Found'],
-			['MethodNotAllowed', 405, '405 Method Not Allowed'],
-			['NotAcceptable', 406, '406 Not Acceptable'],
-			['ProxyAuthenticationRequired', 407, '407 Proxy Authentication Required'],
-			['RequestTimeout', 408, '408 Request Timeout'],
-			['Conflict', 409, '409 Conflict'],
-			['Gone', 410, '410 Gone'],
-			['LengthRequired', 411, '411 Length Required'],
-			['PreconditionFailed', 412, '412 Precondition Failed'],
-			['RequestEntityTooLarge', 413, '413 Request Entity Too Large'],
-			['RequestUriTooLong', 414, '414 Request-URI Too Long'],
-			['UnsupportedMediaType', 415, '415 Unsupported Media Type'],
-			['RequestedRangeNotSatisfiable', 416, '416 Requested Range Not Satisfiable'],
-			['ExpectationFailed', 417, '417 Expectation Failed']
-		];
-	}
+    /**
+     * @test
+     * @dataProvider clientErrorExceptionsProvider
+     */
+    public function checkStaticInitialization(string $exceptionName, int $exceptionCode)
+    {
+        $exceptionClassName = sprintf(self::EXCEPTION_CLASS_NAME_PATTERN, $exceptionName);
+        $previousException = new \Exception();
+
+        try {
+            throw $exceptionClassName::get(self::CUSTOM_EXCEPTION_MESSAGE, $previousException);
+        } catch (HttpException $e) {
+            $this->assertInstanceOf('\HttpException\ClientErrorException', $e);
+            $this->assertEquals(self::CUSTOM_EXCEPTION_MESSAGE, $e->getMessage());
+            $this->assertEquals($exceptionCode, $e->getCode());
+            $this->assertEquals($previousException, $e->getPrevious());
+        }
+    }
+
+    /**
+     * Provider of Client Error Exceptions.
+     * 
+     * @return array
+     */
+    public function clientErrorExceptionsProvider(): array
+    {
+        return [
+            ["BadRequestException", 400, "400 Bad Request"],
+            ["UnauthorizedException", 401, "401 Unauthorized"],
+            ["PaymentRequiredException", 402, "402 Payment Required"],
+            ["ForbiddenException", 403, "403 Forbidden"],
+            ["NotFoundException", 404, "404 Not Found"],
+            ["MethodNotAllowedException", 405, "405 Method Not Allowed"],
+            ["NotAcceptableException", 406, "406 Not Acceptable"],
+            ["ProxyAuthenticationRequiredException", 407, "407 Proxy Authentication Required"],
+            ["RequestTimeoutException", 408, "408 Request Timeout"],
+            ["ConflictException", 409, "409 Conflict"],
+            ["GoneException", 410, "410 Gone"],
+            ["LengthRequiredException", 411, "411 Length Required"],
+            ["PreconditionFailedException", 412, "412 Precondition Failed"],
+            ["PayloadTooLargeException", 413, "413 Payload Too Large"],
+            ["URITooLongException", 414, "414 URI Too Long"],
+            ["UnsupportedMediaTypeException", 415, "415 Unsupported Media Type"],
+            ["RangeNotSatisfiableException", 416, "416 Range Not Satisfiable"],
+            ["ExpectationFailedException", 417, "417 Expectation Failed"],
+            ["IMaTeapotException", 418, "418 I'm a teapot"],
+            ["MisdirectedRequestException", 421, "421 Misdirected Request"],
+            ["UnprocessableEntityException", 422, "422 Unprocessable Entity"],
+            ["LockedException", 423, "423 Locked"],
+            ["FailedDependencyException", 424, "424 Failed Dependency"],
+            ["TooEarlyException", 425, "425 Too Early"],
+            ["UpgradeRequiredException", 426, "426 Upgrade Required"],
+            ["PreconditionRequiredException", 428, "428 Precondition Required"],
+            ["TooManyRequestsException", 429, "429 Too Many Requests"],
+            ["RequestHeaderFieldsTooLargeException", 431, "431 Request Header Fields Too Large"],
+            ["UnavailableForLegalReasonsException", 451, "451 Unavailable For Legal Reasons"],
+        ];
+    }
 }

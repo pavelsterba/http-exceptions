@@ -1,20 +1,23 @@
 <?php
+
+declare(strict_types=1);
+
 namespace HttpException;
 
 /**
- * Parent class for 4xx client error exceptions.
- *
+ * Parent class for 4xx Client Error Exceptions.
+ * 
  * @author Pavel Sterba
  */
-abstract class ClientErrorException extends Exception
+abstract class ClientErrorException extends HttpException
 {
-	/**
-	 * @var string
-	 */
-	protected $message = 'Client Error 4xx';
+    /**
+     * @var int
+     */
+    protected $code = 40;
 
-	/**
-	 * @var int
-	 */
-	protected $code = 4;
+    /**
+     * @var string
+     */
+    protected $message = "Client Error Exception";
 }

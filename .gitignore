@@ -1,6 +1,1 @@
-.buildpath
-.project
-.settings
-.metadata
 vendor
-composer.lock

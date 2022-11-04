@@ -1,17 +1,30 @@
 {
-	"name": "pavelsterba/http-exceptions",
-	"description": "HTTP status code exceptions for PHP.",
-	"license": "MIT",
-	"type": "library",
-	"homepage": "https://github.com/pavelsterba/http-exceptions",
-	"keywords": ["php", "exceptions", "http"],
-	"autoload": {
-		"psr-4": {
-			"HttpException\\": "src/"
-		}
-	},
-	"authors": [{
-		"name": "Pavel Sterba",
-		"email": "email@pavelsterba.com"
-	}]
+  "name": "pavelsterba/http-exceptions",
+  "description": "HTTP status code exceptions for PHP.",
+  "license": "MIT",
+  "type": "library",
+  "homepage": "https://github.com/pavelsterba/http-exceptions",
+  "keywords": [
+    "php",
+    "exceptions",
+    "http",
+    "api"
+  ],
+  "autoload": {
+    "psr-4": {
+      "HttpException\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Pavel Sterba",
+      "email": "email@pavelsterba.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.4"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5"
+  }
 }

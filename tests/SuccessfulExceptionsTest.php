@@ -6,16 +6,16 @@ use HttpException\HttpException;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests for 5xx Server Error Exceptions.
+ * Tests for 2xx Successful Exceptions.
  *
  * @author Pavel Sterba
  */
-class ServerErrorExceptionsTest extends TestCase
+class SuccessfulExceptionsTest extends TestCase
 {
     /**
      * @var string
      */
-    const EXCEPTION_CLASS_NAME_PATTERN = '\HttpException\ServerError\%s';
+    const EXCEPTION_CLASS_NAME_PATTERN = '\HttpException\Successful\%s';
 
     /**
      * @var string
@@ -37,7 +37,7 @@ class ServerErrorExceptionsTest extends TestCase
 
     /**
      * @test
-     * @dataProvider serverErrorExceptionsProvider
+     * @dataProvider successfulExceptionsProvider
      */
     public function checkExceptionType(string $exceptionName)
     {
@@ -45,26 +45,26 @@ class ServerErrorExceptionsTest extends TestCase
 
         $this->assertInstanceOf('\Exception', $e);
         $this->assertInstanceOf('\HttpException\HttpException', $e);
-        $this->assertInstanceOf('\HttpException\ServerErrorException', $e);
+        $this->assertInstanceOf('\HttpException\SuccessfulException', $e);
     }
 
     /**
      * @test
-     * @dataProvider serverErrorExceptionsProvider
+     * @dataProvider successfulExceptionsProvider
      */
     public function checkExceptionNotType(string $exceptionName)
     {
         $e = $this->initializeException($exceptionName);
 
-        $this->assertNotInstanceOf('\HttpException\SuccessfulException', $e);
-        $this->assertNotInstanceOf('\HttpException\RedirectionException', $e);
         $this->assertNotInstanceOf('\HttpException\InformationalException', $e);
+        $this->assertNotInstanceOf('\HttpException\RedirectionException', $e);
         $this->assertNotInstanceOf('\HttpException\ClientErrorException', $e);
+        $this->assertNotInstanceOf('\HttpException\ServerErrorException', $e);
     }
 
     /**
      * @test
-     * @dataProvider serverErrorExceptionsProvider
+     * @dataProvider successfulExceptionsProvider
      */
     public function checkStaticInitialization(string $exceptionName, int $exceptionCode)
     {
@@ -74,7 +74,7 @@ class ServerErrorExceptionsTest extends TestCase
         try {
             throw $exceptionClassName::get(self::CUSTOM_EXCEPTION_MESSAGE, $previousException);
         } catch (HttpException $e) {
-            $this->assertInstanceOf('\HttpException\ServerErrorException', $e);
+            $this->assertInstanceOf('\HttpException\SuccessfulException', $e);
             $this->assertEquals(self::CUSTOM_EXCEPTION_MESSAGE, $e->getMessage());
             $this->assertEquals($exceptionCode, $e->getCode());
             $this->assertEquals($previousException, $e->getPrevious());
@@ -82,24 +82,23 @@ class ServerErrorExceptionsTest extends TestCase
     }
 
     /**
-     * Provider of Server Error Exceptions.
+     * Provider of Successful Exceptions.
      * 
      * @return array
      */
-    public function serverErrorExceptionsProvider(): array
+    public function successfulExceptionsProvider(): array
     {
         return [
-            ["InternalServerErrorException", 500, "500 Internal Server Error"],
-            ["NotImplementedException", 501, "501 Not Implemented"],
-            ["BadGatewayException", 502, "502 Bad Gateway"],
-            ["ServiceUnavailableException", 503, "503 Service Unavailable"],
-            ["GatewayTimeoutException", 504, "504 Gateway Timeout"],
-            ["HTTPVersionNotSupportedException", 505, "505 HTTP Version Not Supported"],
-            ["VariantAlsoNegotiatesException", 506, "506 Variant Also Negotiates"],
-            ["InsufficientStorageException", 507, "507 Insufficient Storage"],
-            ["LoopDetectedException", 508, "508 Loop Detected"],
-            ["NotExtendedException", 510, "510 Not Extended"],
-            ["NetworkAuthenticationRequiredException", 511, "511 Network Authentication Required"],
+            ["OKException", 200, "200 OK"],
+            ["CreatedException", 201, "201 Created"],
+            ["AcceptedException", 202, "202 Accepted"],
+            ["NonAuthoritativeInformationException", 203, "203 Non-Authoritative Information"],
+            ["NoContentException", 204, "204 No Content"],
+            ["ResetContentException", 205, "205 Reset Content"],
+            ["PartialContentException", 206, "206 Partial Content"],
+            ["MultiStatusException", 207, "207 Multi-Status"],
+            ["AlreadyReportedException", 208, "208 Already Reported"],
+            ["IMUsedException", 226, "226 IM Used"],
         ];
     }
 }
